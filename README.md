@@ -1,14 +1,30 @@
 # Site Color Palette Generator
 
-A Python tool that extracts and visualizes color palettes from websites. This tool analyzes a website's CSS and HTML to identify primary, secondary, accent, and neutral colors, then generates a visual representation of the color scheme.
+**Purpose:**
+This Python tool extracts and visualizes color palettes from any website, making it easy to analyze and hand off color schemes for design or development.
 
-## Features
+**Main Features
+Extract Color Palettes from Websites:**
+Given a website URL, the tool fetches the site’s CSS and HTML, analyzes them, and identifies the main colors used.
 
-- Extract color palettes from any website URL
-- Identify primary, secondary, accent, and neutral colors
-- Generate visual color palette previews
-- Save color palette visualizations as images
-- Interactive color display with hover effects
+**Color Classification:**
+The script classifies extracted colors into categories:
+Primary
+Secondary
+Accent
+Neutral
+This helps in understanding the color hierarchy and usage on the site.
+
+**Palette Auto-Optimization:**
+The tool can automatically optimize the palette for better hand-off to designers or builders, ensuring the most relevant and visually distinct colors are selected.
+
+**Visualization:**
+Generates a visual preview of the color palette, displaying each color group in a clear, organized layout.
+Includes interactive features like hover and active states for primary colors.
+Can save the visualization as an image for sharing or documentation.
+
+**Headless Functionality:**
+The script can run in headless mode, making it suitable for automated workflows or CI/CD pipelines.
 
 ## Installation
 
