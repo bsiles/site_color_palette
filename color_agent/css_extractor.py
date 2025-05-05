@@ -1,68 +1,56 @@
-import re, requests
-from collections import Counter
+"""
+CSS colour extractor  –  frequency-ordered
+Grabs colours from:
+  • external <link rel="stylesheet"...>
+  • <style> blocks
+  • inline style="…"
+Returns them sorted by descending frequency (most_common → least).
+"""
+
+from __future__ import annotations
+import re, requests, colorsys
 from bs4 import BeautifulSoup
-from pathlib import Path
-from .utils import HEX_RE, relative_url
+from urllib.parse import urljoin, urlparse
+from collections import Counter
 
-def download_css(url: str) -> str:
-    return requests.get(url, timeout=10).text
+HEX_RE = re.compile(r'#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})\b')
+RGB_RE = re.compile(r'rgb\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)')
+HSL_RE = re.compile(r'hsl[a]?\(\s*(\d{1,3})\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%\s*\)')
 
-def colours_from_stylesheet(url: str) -> list[str]:
-    css = download_css(url)
-    return HEX_RE.findall(css)
+def _norm(hx:str)->str: return "#"+"".join(c*2 for c in hx[1:]) if len(hx)==4 else hx.lower()
+def _rgb_hex(r,g,b): return f"#{int(r):02x}{int(g):02x}{int(b):02x}"
+def _hsl_hex(h,s,l):
+    h,s,l = map(float,(h,s,l)); import colorsys
+    r,g,b = colorsys.hls_to_rgb(h/360,l/100,s/100)
+    return f"#{int(r*255):02x}{int(g*255):02x}{int(b*255):02x}"
 
-def url_to_css_links(page_url: str) -> list[str]:
-    html = requests.get(page_url, timeout=10).text
-    soup = BeautifulSoup(html, "html.parser")
-    links = [
-        relative_url(page_url, l["href"])
-        for l in soup.find_all("link", rel=lambda v: v and "stylesheet" in v.lower())
-        if l.get("href")
-    ]
-    return links
+def _collect(css:str)->list[str]:
+    out=[_norm(c) for c in HEX_RE.findall(css)]
+    out+=[_rgb_hex(r,g,b) for r,g,b in RGB_RE.findall(css)]
+    out+=[_hsl_hex(h,s,l) for h,s,l in HSL_RE.findall(css)]
+    return out
 
-def extract(page_url: str, top_k: int = 12) -> list[str]:
-    """Extract common colors from CSS files linked in the page."""
-    print(f"‣ scraping CSS from {page_url}")
-    
-    # Get the page content
-    response = requests.get(page_url)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.text, "html.parser")
-    
-    # Find all CSS links
-    css_urls = []
-    for link in soup.find_all("link", rel="stylesheet"):
-        href = link.get("href", "")
-        if href:
-            # Handle relative URLs
-            if href.startswith("//"):
-                href = "https:" + href
-            elif href.startswith("/"):
-                # Get the base URL
-                from urllib.parse import urlparse
-                parsed = urlparse(page_url)
-                base_url = f"{parsed.scheme}://{parsed.netloc}"
-                href = base_url + href
-            css_urls.append(href)
-    
-    # Extract colors from each CSS file
-    all_colors = []
-    for css_url in css_urls:
-        try:
-            css_response = requests.get(css_url)
-            css_response.raise_for_status()
-            css_content = css_response.text
-            
-            # Extract hex colors
-            hex_colors = re.findall(r"#[0-9a-fA-F]{6}", css_content)
-            all_colors.extend(hex_colors)
-        except Exception as e:
-            print(f"Error: {str(e)}")
-            continue
-    
-    # Count color frequencies
-    color_counts = Counter(all_colors)
-    
-    # Return top k most common colors
-    return [color for color, _ in color_counts.most_common(top_k)]
+def _abs(base,link): return link if urlparse(link).netloc else urljoin(base,link)
+
+def extract(page_url:str, top_k:int=20)->list[str]:
+    try: html=requests.get(page_url,timeout=10).text
+    except Exception: return []
+
+    soup=BeautifulSoup(html,"html.parser")
+    bucket:Counter=Counter()
+
+    def _see(css:str): bucket.update(_collect(css))
+
+    for l in soup.find_all("link",rel=lambda v:v and "stylesheet" in v.lower()):
+        href=l.get("href"); 
+        if not href: continue
+        try: _see(requests.get(_abs(page_url,href),timeout=10).text)
+        except Exception: pass
+
+    for tag in soup.find_all("style"):
+        _see(tag.get_text())
+
+    for tag in soup.find_all(style=True):
+        _see(tag["style"])
+
+    return [c.lower() for c,_ in bucket.most_common(top_k)]
