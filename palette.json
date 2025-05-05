@@ -1,0 +1,53 @@
+{
+  "primary": {
+    "50": "#c0bfff",
+    "100": "#7672ff",
+    "300": "#2b26ff",
+    "500": "#0500ff",
+    "700": "#0500d8",
+    "900": "#03008c",
+    "foreground": "#FFFFFF"
+  },
+  "secondary": {
+    "50": "#ffffff",
+    "100": "#ffffff",
+    "300": "#ffffff",
+    "500": "#f7f7f7",
+    "700": "#d1d1d1",
+    "900": "#878787",
+    "foreground": "#FFFFFF"
+  },
+  "accent": {
+    "500": "#e8e8e8",
+    "foreground": "#FFFFFF"
+  },
+  "neutral": {
+    "0": "#FFFFFF",
+    "50": "#F7F9FA",
+    "100": "#ECEFF1",
+    "300": "#CAD1D6",
+    "500": "#8A959E",
+    "700": "#4E5B67",
+    "900": "#111111"
+  },
+  "success": {
+    "500": "#12B76A",
+    "foreground": "#FFFFFF"
+  },
+  "warning": {
+    "500": "#F79009",
+    "foreground": "#111111"
+  },
+  "error": {
+    "500": "#D92D20",
+    "foreground": "#FFFFFF"
+  },
+  "info": {
+    "500": "#2D8CFF",
+    "foreground": "#FFFFFF"
+  },
+  "background": "#FFFFFF",
+  "surface": "#F7F9FA",
+  "text": "#111111",
+  "text-muted": "#4E5B67"
+}
