@@ -1,0 +1,58 @@
+{
+  "primary": {
+    "50": "#a1a1ff",
+    "100": "#6f6fff",
+    "300": "#1212ff",
+    "500": "#0000ee",
+    "700": "#0000ca",
+    "900": "#000082",
+    "foreground": "#FFFFFF"
+  },
+  "secondary": {
+    "500": "#7600ee",
+    "foreground": "#FFFFFF",
+    "300": "#8712ff"
+  },
+  "accent": {
+    "500": "#0071e4",
+    "foreground": "#FFFFFF",
+    "600": "#0060c1"
+  },
+  "neutral": {
+    "0": "#FFFFFF",
+    "50": "#F7F9FA",
+    "100": "#ECEFF1",
+    "300": "#CAD1D6",
+    "500": "#8A959E",
+    "700": "#76838d",
+    "900": "#67737c"
+  },
+  "success": {
+    "500": "#12B76A",
+    "foreground": "#FFFFFF"
+  },
+  "warning": {
+    "500": "#F79009",
+    "foreground": "#111111"
+  },
+  "error": {
+    "500": "#D92D20",
+    "foreground": "#FFFFFF"
+  },
+  "info": {
+    "500": "#2D8CFF",
+    "foreground": "#FFFFFF"
+  },
+  "background": "#FFFFFF",
+  "surface": "#F7F9FA",
+  "text": "#111111",
+  "text-muted": "#4E5B67",
+  "primaryHover": "#0b0bff",
+  "primaryActive": "#0000d1",
+  "secondaryHover": "#840bff",
+  "secondaryActive": "#6700d1",
+  "accentHover": "#007eff",
+  "accentActive": "#0063c8",
+  "heroGradientStart": "#9393ff",
+  "heroGradientEnd": "#0000ee"
+}

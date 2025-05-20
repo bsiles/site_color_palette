@@ -73,5 +73,4 @@ def show_palette(
     if save_path:
         plt.savefig(save_path, dpi=180, bbox_inches='tight')
         print(f"✓ saved preview → {save_path}")
-    else:
         plt.show()
